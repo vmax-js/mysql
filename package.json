@@ -1,0 +1,22 @@
+{
+  "name": "mysql",
+  "version": "1.0.0",
+  "description": "- 什么是驱动程序   - 驱动程序是连接内存和其他存储介质的桥梁   - mysql驱动程序是连接内存数据和mysql数据的桥梁   - mysql的驱动程序通常使用： mysql和mysql2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmax-js/mysql.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vmax-js/mysql/issues"
+  },
+  "homepage": "https://github.com/vmax-js/mysql#readme",
+  "dependencies": {
+    "mysql2": "^2.2.5"
+  }
+}
