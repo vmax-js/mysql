@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vmax-js/mysql#readme",
   "dependencies": {
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5"
   }
 }

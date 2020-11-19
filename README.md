@@ -1,183 +1,168 @@
-## mysql驱动程序
-### 什么是驱动程序
-  - 驱动程序是连接内存和其他存储介质的桥梁
-  - mysql驱动程序是连接内存数据和mysql数据的桥梁
-  - mysql的驱动程序通常使用： mysql和mysql2 
+## Sequelize
 
-### 安装
-  - npm i mysql2
-### 使用
+### Sequelize是一个ORM框架
+- ORM Object Relational Mapping 对象关系映射
+- 通过ORM框架，可以自动的把程序中的对象和数据库关联
+- ORM框架会隐藏具体的数据库底层细节，让开发者使用同样的的数据操作接口，完成不同数据库的操作
+- ORM的优势
+  - 开发者不用关心数据库，仅关心对象
+  - 可以轻易的完成数据库的移植
+  - 无须拼接复杂的sql语句即可完成精确查询
+### Node中的ORM
+- sequelize  成熟
+  - JS
+  - TS
+- TypeORM 不成熟
+  - TS
 
-#### 导入mysql2
+### 模型的定义和同步
+#### 入门
+- 安装sequelize和mysql2
+```npm i sequelize mysql2```
+#### 连接到数据库
+- 定义
 ```js
-const mysql = require('mysql2');
-```
+const {
+    Sequelize
+} = require('sequelize');
 
-#### 创建一个数据库连接
-```js
-const connection = mysql.createConnection({
+const sequelize = new Sequelize('myschooldb', 'root', 'tan501924?', {
     host: 'localhost',
-    user: 'root',
-    password: 'tan501924?',
-    database: 'companydb', //数据库名称
+    dialect: 'mysql' //数据库的类型
 });
+module.exports = sequelize;
 ```
-#### 操作数据库
-  - 查询
+- 连接测试
 ```js
-connection.query(
-    // mysql语句
-    'select * from `company`;',
-    /**
-     * 
-     * @param {*} error 错误
-     * @param {*} results 查询结果，返回一个数据，每一项为一个对象
-     * @param {*} fields 原数据
-     */
-    function(error,results,fields){
-        console.log(results); // 查询结果
-        // console.log(fields); 原数据一般用不到
+const sequelize = require('./models/db.js');
+(async function(){
+    try{
+        await sequelize.authenticate();
+        console.log('successfully');
+    }catch(error){
+        console.error('Unable to connect to the database',error);
     }
-);
+})();
 ```
-  - 添加数据
+- 关闭连接
+一般不需要我们自动关闭连接，如果要手动关闭连接```sequlize.close()```;
+
+#### 定义模型
 ```js
-connection.query(
-    "insert into company(`name`,location,buildDate) values('tan科技','重庆',curdate());",
-    (err, results) => {
-        console.log(results);
-        /*
-            ResultSetHeader {
-                fieldCount: 0,
-                affectedRows: 1,  //影响的行数
-                insertId: 4, // 新增的主键id
-                info: '',
-                serverStatus: 2,
-                warningStatus: 0
-            }
-        */
+const sequelize = require('./db');
+const {
+    DataTypes
+} = require('sequelize');
+
+// 定义模型 返回一个模型对象
+const Admin = sequelize.define("Admin", {
+    loginId: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    loginPwd: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
-)
+}, {
+    // freezeTableName: true, // 表名和模型名一致，默认为false，表名变为复数
+    // tableName: 'admins',// 自己设置表名
+    createdAt: false,
+    updatedAt: false,
+    paranoid: true, //不会真正删除，添加一列delectAt存储删除信息
+});
+module.exports = Admin;
 ```
-  - 修改数据
+#### 模型的增删改
+- 增加
 ```js
-connection.query(
-    "update company set `name` = 'TSCN' where id = 4;",
-    (err,results)=>{
-        console.log(results);
-    }
-    /*
-        ResultSetHeader {
-            fieldCount: 0,
-            affectedRows: 1,
-            insertId: 0,
-            info: 'Rows matched: 1  Changed: 1  Warnings: 0',
-            serverStatus: 2,
-            warningStatus: 0,
-            changedRows: 1
-        }
-    */
-)
-```
- - 删除
-```js
-connection.query(
-    "delete from company where id=4;",
-    (err,res)=>{
-        console.log(res);
-    }
-    /*
-            ResultSetHeader {
-                fieldCount: 0,
-                affectedRows: 1,
-                insertId: 0,
-                info: '',
-                serverStatus: 2,
-                warningStatus: 0
-            }
-    */
-)
-```
-#### 关闭连接
-```js
-connection.end();
-```
-### mysql/promise
-- 导入mysql2/promise
-- 异步操作
-```js
-const mysql = require('mysql2/promise');
-async function test(){
-
-    const connection = await mysql.createConnection({
-        host:'localhost',
-        user:'root',
-        password:'tan501924?',
-        database:'companydb'
-    });
-    const [results] = await connection.query('select * from company;');
-    console.log(results);
-    connection.end();
-}
-test();
-```
-### 防止sql注入
-sql注入：用户通过sql语句到最终查询中，导致了整个sql与预期行为不符合
-- 例子
-```js
-const mysql = require('mysql2/promise');
-async function test(id){
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'tan501924?',
-        database: 'companydb',
-        multipleStatements: true //运行多条sql语句默认为false
-    });
-    const sql = `select * from company where id=${id}`;
-    const [results] = await connection.query(sql);
-    console.log(results);
-    connection.end();
-}
-test(`'';insert into company(\`name\`,location,buildDate) values('t','dd',curdate());`); // 最终导致在数据库中添加了一条数据
-
-```
-#### 解决
-使用sql变量，sql预编译，将query改为execute
-```js
-const mysql = require('mysql2/promise');
-async function test(id){
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'tan501924?',
-        database: 'companydb',
-        multipleStatements: true //运行多条sql语句默认为false
-    });
-    const sql = `select * from company where id=?`; // ?为变量
-    // const sql = `select * from employee where \`name\` like concat('%',?,'%');`;
-    const [results] = await connection.execute(sql,[id]);//数组中依次为变量
-    console.log(results);
-    connection.end();
-}
-test(`'';insert into company(\`name\`,location,buildDate) values('t','dd',curdate());`); // 最终导致在数据库中添加了一条数据
-
-```
-
-### 连接池
-```js
-const mysql = require('mysql/promise');
-const pool = mysql.createPool({
-    host:"localhost",
-    user:'root',
-    password:'tan501924?',
-    database:'companydb',
-    mutipleStatement:true,
-    waitForConnection:true,
-    connectionLimit:10
+// 增加 方式1
+const Admin = require("./models/Admin");
+const ins = Admin.build({
+    loginId: "abc",
+    loginPwd: "123",
+    name:"tan"
+});  //同步方法，构建一个模型实例
+ins.loginId = "abc1";
+ins.save().then(()=>{
+    console.log('构建成功!');
 })
-async function test(id){
-    const sql = `select * from company where id = ?;`;
-    const [results] = await pool.execute(sql,id);
+
+// 增加 方式2
+const Admin = require("./models/Admin");
+Admin.create({
+    loginId: "771835525",
+    loginPwd: "tan924?",
+    name:"XGives"
+}).then(ins=>{
+    console.log('新建成功管理员！',ins);
+});
+// ins实例
+/*
+Admin {
+  dataValues: { id: 4, loginId: '771835525', loginPwd: 'tan924?', name: 'XGives' },
+  _previousDataValues: {
+    loginId: '771835525',
+    loginPwd: 'tan924?',
+    name: 'XGives',
+    id: 4,
+    deletedAt: undefined
+  },
+  _changed: Set {},
+  _options: {
+    isNewRecord: true,
+    _schema: null,
+    _schemaDelimiter: '',
+    attributes: undefined,
+    include: undefined,
+    raw: undefined,
+    silent: undefined
+  },
+  isNewRecord: false
 }
+*/
+```
+- 增删改
+```js
+const Admin = require("../models/Admin");
+// 增加
+exports.addAdmin = async function(adminObj){
+    // 应该判断aadmin的各种属性是否合理，以及账号是否存在
+    const ins = await Admin.create(adminObj);
+    return ins.toJSON();
+};
+// 删除
+exports.deleteAdmin = async function(adminId){
+    // 1.有实例
+    // const ins = await Admin.findByPk(adminId);
+    // if(ins){
+    //     await ins.destroy();
+    // }
+
+    // 2.不通过实例
+    const result = await Admin.destroy({
+        where:{
+            id: adminId
+        }
+    });
+    return result;
+};
+//改
+exports.updateAdmin = async function(id,adminObj){
+
+    // const ins = await Admin.findByPk(id);
+    // ins.loginId = adminObj.loginId;
+    // ins.save();
+
+    const result = await Admin.update(adminObj,{
+        where:{
+            id,
+        },
+    });
+    return result;
+};
 ```
