@@ -57,12 +57,15 @@ Admin {
 */
 
 
-const adminServ = require('./services/adminService');
+// const adminServ = require('./services/adminService');
 
-const a = adminServ.addAdmin({
-    loginId: "tanbiao",
-    loginPwd: "12333",
-    name:"bi"
-});
+// const a = adminServ.addAdmin({
+//     loginId: "tanbiao",
+//     loginPwd: "12333",
+//     name:"bi"
+// });
 
-console.log(a);
+// console.log(a);
+
+require('./models/relation');
+require('./mock/mockStudent');

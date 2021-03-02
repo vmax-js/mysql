@@ -17,5 +17,5 @@ const Class = sequelize.define('Class', {
     updatedAt: true,
     paranoid: true
 });
-Class.hasMany(Student);//设置外健
+// Class.hasMany(Student);//设置外健
 module.exports = Class;

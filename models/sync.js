@@ -3,6 +3,7 @@ require('./Admin');
 require('./Student');
 require('./Class');
 require('./Book');
+require('./relation')
 const sequelize = require('./db');
 sequelize.sync({
     alter: true
