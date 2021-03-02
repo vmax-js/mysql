@@ -22,3 +22,11 @@ exports.updateClass = async function (id, classObj) {
     });
     return result;
 }
+
+exports.findAll = async function(){
+    const result = await Class.findAll();
+    if(result){
+        return JSON.parse(JSON.stringify(result));
+    }
+    return null;
+}

@@ -68,4 +68,27 @@ Admin {
 // console.log(a);
 
 require('./models/relation');
-require('./mock/mockStudent');
+// require('./mock/mockStudent');
+
+// 查询测试 不区分大小写 可操作mysql改动某一列是否区分大小写 推荐js来判断
+const adminServ = require('./services/adminService');
+
+// adminServ.login('abc1','123').then(res=>{
+//   console.log(res);
+// })
+
+// 根据主键来查询
+// adminServ.getAdminById(1).then(r=>{
+//   console.log(r);
+// })
+
+// const stuServ = require('./services/studentService');
+
+// stuServ.getStudents(1,10,1,'强').then((res)=>{
+//   console.log(res);
+// })
+
+// const classServ = require('./services/classService');
+// classServ.findAll().then(res=>{
+//   console.log(res);
+// })

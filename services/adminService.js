@@ -37,3 +37,28 @@ exports.updateAdmin = async function(id,adminObj){
     });
     return result;
 };
+
+exports.login = async function(loginId,loginPwd){
+    // 查询单个数据
+    const result = await Admin.findOne({
+        where:{
+            loginId,
+            loginPwd
+        }
+    });
+    // 大小写区分
+    if(result && result.loginId === loginId && result.loginPwd === loginPwd){
+        return result.toJSON();
+    }
+    return null;
+}
+// 根据主键来查询
+exports.getAdminById = async function(id){
+    const result = await Admin.findByPk(id);
+    if(result){
+        return result.toJSON();
+    }
+    return null;
+
+}
+

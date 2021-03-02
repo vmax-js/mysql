@@ -21,3 +21,11 @@ exports.updateBook = async function (id, bookObj) {
     });
     return result;
 }
+
+exports.getBook = async function(name){
+    const result = await Book.findOne(name);
+    if(result){
+        return JSON.parse(JSON.stringify(result));
+    }
+    return null;
+}
