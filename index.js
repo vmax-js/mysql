@@ -71,7 +71,7 @@ require('./models/relation');
 // require('./mock/mockStudent');
 
 // 查询测试 不区分大小写 可操作mysql改动某一列是否区分大小写 推荐js来判断
-const adminServ = require('./services/adminService');
+// const adminServ = require('./services/adminService');
 
 // adminServ.login('abc1','123').then(res=>{
 //   console.log(res);
@@ -92,3 +92,23 @@ const adminServ = require('./services/adminService');
 // classServ.findAll().then(res=>{
 //   console.log(res);
 // })
+
+
+// const md5 = require('md5');
+
+// const res = md5('');
+// console.log(res);
+
+const adminServ = require('./services/adminService');
+
+// adminServ.addAdmin({
+//   loginId:'tanbiao',
+//   loginPwd:"tan501924?",
+//   name:'tan110'
+// }).then(res=>{
+//   console.log(res);
+// })
+
+adminServ.login('tanbiao','tan501924?').then(res=>{
+  console.log(res);
+})
