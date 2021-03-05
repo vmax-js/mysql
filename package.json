@@ -4,7 +4,9 @@
   "description": "- 什么是驱动程序   - 驱动程序是连接内存和其他存储介质的桥梁   - mysql驱动程序是连接内存数据和mysql数据的桥梁   - mysql的驱动程序通常使用： mysql和mysql2",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -x npm run server",
+    "server":"node index"
   },
   "repository": {
     "type": "git",
@@ -27,5 +29,8 @@
     "mysql2": "^2.2.5",
     "sequelize": "^6.3.5",
     "validate.js": "^0.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
