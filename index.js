@@ -67,7 +67,7 @@ Admin {
 
 // console.log(a);
 
-require('./models/relation');
+// require('./models/relation');
 // require('./mock/mockStudent');
 
 // 查询测试 不区分大小写 可操作mysql改动某一列是否区分大小写 推荐js来判断
@@ -99,7 +99,7 @@ require('./models/relation');
 // const res = md5('');
 // console.log(res);
 
-const adminServ = require('./services/adminService');
+// const adminServ = require('./services/adminService');
 
 // adminServ.addAdmin({
 //   loginId:'tanbiao',
@@ -109,6 +109,9 @@ const adminServ = require('./services/adminService');
 //   console.log(res);
 // })
 
-adminServ.login('tanbiao','tan501924?').then(res=>{
-  console.log(res);
-})
+// adminServ.login('tanbiao','tan501924?').then(res=>{
+//   console.log(res);
+// })
+
+
+require('./init');

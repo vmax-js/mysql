@@ -2,6 +2,7 @@ const sequelize = require('./db');
 const {
     DataTypes
 } = require('sequelize');
+const moment = require('moment');
 const Student = sequelize.define('Student', {
     name: {
         type: DataTypes.STRING,
@@ -9,7 +10,22 @@ const Student = sequelize.define('Student', {
     },
     birthday: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        // 访问器
+        get(){
+            // 返回时间戳
+            return this.getDataValue('birthday').getTime()
+        }
+    },
+    // 虚拟字段
+    age:{
+        type:DataTypes.VIRTUAL,
+        get(){
+            const now = moment.utc();
+            const birth = moment.utc(this.birthday);
+            // 得到年份
+            return now.diff(birth,'y');
+        }
     },
     sex: {
         type: DataTypes.BOOLEAN,
