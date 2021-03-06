@@ -6,6 +6,11 @@ const Class = require('../models/Class');
 const validate = require('validate.js');
 const moment = require('moment');
 const { pick } = require('../util/propertyHelper');
+
+exports.getStudentById = async function(id){
+  const result =  await Student.findByPk(id);
+  return result;
+}
 exports.addClass = async function (studentObj) {
     //对于studentObj中不需要的属性进行剔除 筛选我们需要的
     studentObj = pick(studentObj,'name','sex','mobile','birthday','classId');
@@ -172,7 +177,7 @@ exports.getStudents = async function (page = 1, limit = 10, sex = -1, name) {
     }
     const result = await Student.findAndCountAll({
         // 查指定的列
-        attributes: ['id', 'name', 'birthday','age'],
+        attributes: ['id', 'name', 'birthday','age','sex'],
         where: condition,
         include: [Class],
         offset: (page - 1) * limit,
