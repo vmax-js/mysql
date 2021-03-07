@@ -13,8 +13,13 @@ const Student = sequelize.define('Student', {
         allowNull: false,
         // 访问器
         get(){
-            // 返回时间戳
-            return this.getDataValue('birthday').getTime()
+              // 返回时间戳
+            const birth = this.getDataValue('birthday');
+            if(!birth){
+                return this.getDataValue('birthday').getTime()
+            }
+            return undefined;
+           
         }
     },
     // 虚拟字段
